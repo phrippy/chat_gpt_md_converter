@@ -1,0 +1,20 @@
+AllCops:
+  TargetRubyVersion: 3.3.3
+
+Style/Documentation:
+  Description: 'Document classes and non-namespace modules.'
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 140
+  Exclude:
+    - lib/**/*
+
+Metrics/MethodLength:
+  Max: 45
+
+Metrics/AbcSize:
+  Max: 45

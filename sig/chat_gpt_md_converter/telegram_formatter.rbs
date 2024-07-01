@@ -1,0 +1,7 @@
+module ChatGptMdConverter
+  module TelegramFormatter
+    def self.telegram_format: -> String
+
+    def combine_blockquotes: -> String
+  end
+end

@@ -1,0 +1,7 @@
+module ChatGptMdConverter
+  module Converters
+    def convert_html_chars: -> String
+
+    def split_by_tag: -> String
+  end
+end

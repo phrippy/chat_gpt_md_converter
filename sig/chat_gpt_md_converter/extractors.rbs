@@ -1,0 +1,9 @@
+module ChatGptMdConverter
+  module Extractors
+    def ensure_closing_delimiters: -> String
+
+    def extract_and_convert_code_blocks: -> Array[String]
+
+    def reinsert_code_blocks: -> String
+  end
+end

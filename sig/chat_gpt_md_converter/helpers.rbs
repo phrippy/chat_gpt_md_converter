@@ -1,0 +1,5 @@
+module ChatGptMdConverter
+  module Helpers
+    def remove_blockquote_escaping: -> String
+  end
+end

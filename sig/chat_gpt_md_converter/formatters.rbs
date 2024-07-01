@@ -1,0 +1,5 @@
+module ChatGptMdConverter
+  module Formatters
+    def combine_blockquotes: -> String
+  end
+end
