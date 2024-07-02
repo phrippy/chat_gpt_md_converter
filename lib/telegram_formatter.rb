@@ -1,6 +1,5 @@
-require_relative 'version'
 require 'rexml/document'
-require 'debug'
+require_relative 'version'
 require_relative 'converters'
 require_relative 'extractors'
 require_relative 'formatters'
