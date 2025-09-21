@@ -1,34 +1,98 @@
 # ChatGptMdConverter
 
-TODO: Delete this and the text below, and describe your gem
+ChatGptMdConverter converts ChatGPT-flavoured Markdown into HTML that Telegram clients accept. It takes the Markdown you copy from ChatGPT (including nested emphasis, lists, code blocks, blockquotes, and inline links) and prepares a string you can send via the Telegram Bot API with `parse_mode: 'HTML'`.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/chat_gpt_md_converter`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Features
+- Converts Markdown emphasis to Telegram-safe `<b>`, `<i>`, `<u>`, and `<s>` tags, including mixed or nested styling
+- Preserves inline code and fenced code blocks, adding language classes (e.g., `language-ruby`) when present
+- Escapes `<`, `>`, and `&` outside of code blocks so Telegram renders text safely
+- Normalises Markdown lists into Telegram bullets (`•`) and keeps ordered lists intact
+- Wraps multi-line blockquotes in `<blockquote>` and removes ChatGPT citation artefacts
+- Ensures unmatched backticks are closed before conversion to avoid malformed Telegram messages
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add the gem to your project:
 
-Install the gem and add to the application's Gemfile by executing:
+```bash
+bundle add chat_gpt_md_converter
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Or install it globally:
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```bash
+gem install chat_gpt_md_converter
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Require the formatter and pass in the Markdown you want to deliver to Telegram:
+
+```ruby
+require 'chat_gpt_md_converter'
+
+markdown = <<~MD
+  **Release plan**
+  1. _Gather_ requirements
+  2. Ship `code`
+
+  ```ruby
+  puts 'Hello from ChatGPT'
+  ```
+
+  > Reminder: link previews can be disabled.
+
+  [Project board](https://github.com/phrippy/chat_gpt_md_converter)
+MD
+
+html = ChatGptMdConverter::TelegramFormatter.telegram_format(markdown)
+
+# Example with the Telegram Bot API
+bot.api.send_message(
+  chat_id: chat_id,
+  text: html,
+  parse_mode: 'HTML',
+  disable_web_page_preview: true
+)
+```
+
+The example above renders on Telegram as:
+
+```
+<b>Release plan</b>
+1. <i>Gather</i> requirements
+2. Ship <code>code</code>
+
+<pre><code class="language-ruby">puts 'Hello from ChatGPT'
+</code></pre>
+
+<blockquote>Reminder: link previews can be disabled.</blockquote>
+
+<a href="https://github.com/phrippy/chat_gpt_md_converter">Project board</a>
+```
+
+### Tips
+- ChatGPT footnote-style citations (`【n†source】`) are removed automatically; keep the raw links if you need them.
+- Telegram only supports a subset of HTML. Always send the resulting string with `parse_mode: 'HTML'`.
+- If you need custom behaviour, extend or monkey-patch the modules in `lib/` (e.g., `Converters`, `Formatters`).
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+- `bin/setup` installs dependencies.
+- `bundle exec rspec` (or `rake spec`) runs the test suite.
+- `bin/console` opens an interactive shell with the gem loaded.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+When releasing:
+
+```bash
+bundle exec rake release
+```
+
+This updates the version, tags the release, and publishes the gem.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/chat_gpt_md_converter. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/chat_gpt_md_converter/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/phrippy/chat_gpt_md_converter. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/phrippy/chat_gpt_md_converter/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -36,4 +100,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the ChatGptMdConverter project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/chat_gpt_md_converter/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the ChatGptMdConverter project's codebases, issue trackers, chat rooms, and mailing lists is expected to follow the [code of conduct](https://github.com/phrippy/chat_gpt_md_converter/blob/master/CODE_OF_CONDUCT.md).
