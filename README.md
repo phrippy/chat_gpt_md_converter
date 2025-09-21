@@ -28,7 +28,7 @@ gem install chat_gpt_md_converter
 
 Require the formatter and pass in the Markdown you want to deliver to Telegram:
 
-```ruby
+````ruby
 require 'chat_gpt_md_converter'
 
 markdown = <<~MD
@@ -54,7 +54,7 @@ bot.api.send_message(
   parse_mode: 'HTML',
   disable_web_page_preview: true
 )
-```
+````
 
 The example above renders on Telegram as:
 
